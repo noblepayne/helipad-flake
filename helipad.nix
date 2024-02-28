@@ -1,5 +1,5 @@
-{ lib, pkgs, fetchFromGitHub, rustPlatform, pkg-config, protobuf, openssl
-, sqlite }: rec {
+{ lib, pkgs, stdenv, fetchFromGitHub, rustPlatform, pkg-config, protobuf
+, openssl, sqlite, ... }: rec {
   helipad = rustPlatform.buildRustPackage rec {
     pname = "helipad";
     version = "v0.1.11";
@@ -11,7 +11,8 @@
     };
     src = helipadSrc;
     nativeBuildInputs = [ pkg-config protobuf ];
-    buildInputs = [ openssl sqlite ];
+    buildInputs = [ openssl sqlite ] ++ lib.optional stdenv.isDarwin
+      pkgs.darwin.apple_sdk.frameworks.SystemConfiguration;
     cargoHash = "sha256-VbToPgSz/rPysRLuLHV917TRatOisc2UylbteZQEVLA=";
     cargoPatches = [ ./Cargo.lock.patch ];
     meta = with lib; {
