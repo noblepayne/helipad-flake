@@ -28,21 +28,21 @@
     version = helipad.version;
     src = helipad.src;
     buildPhase = ''
-      cp -r webroot $out/
+      cp -r webroot $out
     '';
   };
-  helipadWrapped = pkgs.stdenv.mkDerivation {
-    pname = "helipad-wrapped";
-    version = helipad;
-    src = helipad.outPath;
-    buildInputs = [ pkgs.makeWrapper ];
-    buildPhase = ''
-      mkdir -p $out
-      cp -r ./* $out/
-      ls $out
-      wrapProgram $out/bin/helipad \
-        --chdir ${helipadWebroot.outPath} \
-        --set HELIPAD_DATABASE_DIR /tmp/helipad_db
-    '';
-  };
+  # helipadWrapped = pkgs.stdenv.mkDerivation {
+  #   pname = "helipad-wrapped";
+  #   version = helipad;
+  #   src = helipad.outPath;
+  #   buildInputs = [ pkgs.makeWrapper ];
+  #   buildPhase = ''
+  #     mkdir -p $out
+  #     cp -r ./* $out/
+  #     ls $out
+  #     wrapProgram $out/bin/helipad \
+  #       --chdir ${helipadWebroot.outPath} \
+  #       --set HELIPAD_DATABASE_DIR /tmp/helipad_db
+  #   '';
+  # };
 }
