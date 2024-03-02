@@ -53,6 +53,7 @@ let
     database_dir="${cfg.databaseDir}"
     listen_port=${builtins.toString cfg.listenPort}
     macaroon="${cfg.macaroon}"
+    lnd_url="${cfg.lndUrl}"
     cert="${cfg.cert}"
   '';
 in {
@@ -72,6 +73,21 @@ in {
       # Link webroot.
       "L '${cfg.dataDir}/webroot' - - - - ${cfg.pkgs.helipadWebroot}"
     ];
-    environment.systemPackages = [ cfg.pkgs.helipad ];
+    # environment.systemPackages = [ cfg.pkgs.helipad ];
+    systemd.services.helipad = {
+      wantedBy = [ "multi-user.target" ];
+      # TODO: requires lightning?
+      # environment.HELIPAD_RUNAS_USER = cfg.user;  # TODO: this approach vs systemd
+      serviceConfig = {
+        User = cfg.user;
+	Restart = "on-failure";
+	RestartSec = "10s";
+	ReadWritePaths = [ cfg.dataDir cfg.databaseDir ];
+	ReadOnlyPaths = [ cfg.pkgs.helipadWebroot ];
+	ExecPaths = [ cfg.pkgs.helipad ];
+	WorkingDirectory = cfg.dataDir;
+	ExecStart = "${cfg.pkgs.helipad}/bin/helipad";
+      };
+    };
   };
 }
