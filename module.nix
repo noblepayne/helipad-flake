@@ -83,7 +83,8 @@ in {
 	Restart = "on-failure";
 	RestartSec = "10s";
 	ReadWritePaths = [ cfg.dataDir cfg.databaseDir ];
-	ReadOnlyPaths = [ cfg.pkgs.helipadWebroot ];
+	# TODO: skip? configurable?
+	ReadOnlyPaths = [ cfg.pkgs.helipadWebroot "/etc" "/var" ];
 	ExecPaths = [ cfg.pkgs.helipad ];
 	WorkingDirectory = cfg.dataDir;
 	ExecStart = "${cfg.pkgs.helipad}/bin/helipad";
