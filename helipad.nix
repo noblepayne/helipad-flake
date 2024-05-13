@@ -2,18 +2,18 @@
 , openssl, sqlite, ... }: rec {
   helipad = rustPlatform.buildRustPackage rec {
     pname = "helipad";
-    version = "v0.1.11";
+    version = "v0.2.0";
     helipadSrc = fetchFromGitHub {
       owner = "Podcastindex-org";
       repo = pname;
       rev = version;
-      hash = "sha256-NtPikLo3U4zuhHrY6rZzq3UvGgZyuhwy1AEMnj+nmqA=";
+      hash = "sha256-cw7ZxrTe8okHv7H4K8xzK4Ph6eIsBYFQrWHjC7HYZZc=";
     };
     src = helipadSrc;
     nativeBuildInputs = [ pkg-config protobuf ];
     buildInputs = [ openssl sqlite ] ++ lib.optional stdenv.isDarwin
       pkgs.darwin.apple_sdk.frameworks.SystemConfiguration;
-    cargoHash = "sha256-VbToPgSz/rPysRLuLHV917TRatOisc2UylbteZQEVLA=";
+    cargoHash = "sha256-sEUmvtKZW74rsBp72tsdAVOuKdJscGYR2iYVLkopmdc=";
     cargoPatches = [ ./Cargo.lock.patch ];
     meta = with lib; {
       description =
