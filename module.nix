@@ -1,12 +1,16 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-let
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
   options.services.helipad = {
     pkgs = mkOption {
       type = types.attrs;
     };
-    enable = mkEnableOption
+    enable =
+      mkEnableOption
       "Simple lnd poller and web front-end to see and read boosts and boostagrams.";
     dataDir = mkOption {
       type = types.path;
@@ -75,19 +79,23 @@ in {
     ];
     # environment.systemPackages = [ cfg.pkgs.helipad ];
     systemd.services.helipad = {
-      wantedBy = [ "multi-user.target" ];
+      wantedBy = ["multi-user.target"];
       # TODO: requires lightning?
       # environment.HELIPAD_RUNAS_USER = cfg.user;  # TODO: this approach vs systemd
+      environment = {
+        # Explicitly tell OpenSSL/Reqwest where to find the system trust store.
+        SSL_CERT_FILE = "/etc/ssl/certs/ca-certificates.crt";
+      };
       serviceConfig = {
         User = cfg.user;
-	Restart = "on-failure";
-	RestartSec = "10s";
-	ReadWritePaths = [ cfg.dataDir cfg.databaseDir ];
-	# TODO: skip? configurable?
-	ReadOnlyPaths = [ cfg.pkgs.helipadWebroot "/etc" "/var" ];
-	ExecPaths = [ cfg.pkgs.helipad ];
-	WorkingDirectory = cfg.dataDir;
-	ExecStart = "${cfg.pkgs.helipad}/bin/helipad";
+        Restart = "on-failure";
+        RestartSec = "10s";
+        ReadWritePaths = [cfg.dataDir cfg.databaseDir];
+        # TODO: skip? configurable?
+        ReadOnlyPaths = [cfg.pkgs.helipadWebroot "/etc" "/var"];
+        ExecPaths = [cfg.pkgs.helipad];
+        WorkingDirectory = cfg.dataDir;
+        ExecStart = "${cfg.pkgs.helipad}/bin/helipad";
       };
     };
   };

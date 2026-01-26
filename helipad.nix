@@ -1,23 +1,34 @@
-{ lib, pkgs, stdenv, fetchFromGitHub, rustPlatform, pkg-config, protobuf
-, openssl, sqlite, ... }: rec {
+{
+  lib,
+  pkgs,
+  stdenv,
+  fetchFromGitHub,
+  rustPlatform,
+  pkg-config,
+  protobuf,
+  openssl,
+  sqlite,
+  ...
+}: rec {
   helipad = rustPlatform.buildRustPackage rec {
     pname = "helipad";
-    version = "v0.2.0";
+    version = "0.2.1";
     helipadSrc = fetchFromGitHub {
       owner = "Podcastindex-org";
       repo = pname;
-      rev = version;
-      hash = "sha256-cw7ZxrTe8okHv7H4K8xzK4Ph6eIsBYFQrWHjC7HYZZc=";
+      rev = "v${version}";
+      hash = "sha256-A9srTQHVLZNtrUzeFV4grHOkSdXpZtqwNNdr9zxtAhg=";
     };
     src = helipadSrc;
-    nativeBuildInputs = [ pkg-config protobuf ];
-    buildInputs = [ openssl sqlite ] ++ lib.optional stdenv.isDarwin
+    nativeBuildInputs = [pkg-config protobuf];
+    buildInputs =
+      [openssl sqlite]
+      ++ lib.optional stdenv.isDarwin
       pkgs.darwin.apple_sdk.frameworks.SystemConfiguration;
-    cargoHash = "sha256-sEUmvtKZW74rsBp72tsdAVOuKdJscGYR2iYVLkopmdc=";
-    cargoPatches = [ ./Cargo.lock.patch ];
+    cargoHash = "sha256-6eAJtaINzs98YTRNGVrkKIYsY2pqxdIzl44IZSsOuy8=";
+    cargoPatches = [./Cargo.lock.patch];
     meta = with lib; {
-      description =
-        "This is a simple lnd poller and web front-end to see and read boosts and boostagrams.";
+      description = "This is a simple lnd poller and web front-end to see and read boosts and boostagrams.";
       homepage = "https://github.com/Podcastindex-org/helipad";
       license = licenses.mit;
       # maintainers = [];
