@@ -40,6 +40,7 @@
         devShells.default = pkgs.mkShell {
           packages = [pkgs.nix-update];
         };
+        formatter = pkgs.alejandra;
       };
       flake = {
         # The usual flake attributes can be defined here, including system-

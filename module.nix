@@ -105,38 +105,40 @@ in {
       environment = {
         SSL_CERT_FILE = "/etc/ssl/certs/ca-certificates.crt";
       };
-      serviceConfig = {
-        User = cfg.user;
-        Group = cfg.group;
-        Restart = "on-failure";
-        RestartSec = "10s";
-        WorkingDirectory = cfg.dataDir;
-        ExecStart = "${cfg.pkgs.helipad}/bin/helipad";
+      serviceConfig =
+        {
+          User = cfg.user;
+          Group = cfg.group;
+          Restart = "on-failure";
+          RestartSec = "10s";
+          WorkingDirectory = cfg.dataDir;
+          ExecStart = "${cfg.pkgs.helipad}/bin/helipad";
 
-        # Permissions
-        ReadWritePaths = [cfg.dataDir];
-        ReadOnlyPaths = [cfg.pkgs.helipadWebroot "/etc" "/var"];
+          # Permissions
+          ReadWritePaths = [cfg.dataDir];
+          ReadOnlyPaths = [cfg.pkgs.helipadWebroot "/etc" "/var"];
 
-        # Hardening
-      } // optionalAttrs cfg.extraHardening {
-        ProtectSystem = "strict";
-        ProtectHome = true;
-        PrivateTmp = true;
-        NoNewPrivileges = true;
-        PrivateDevices = true;
-        MemoryDenyWriteExecute = true;
-        ProtectKernelTunables = true;
-        ProtectKernelModules = true;
-        ProtectKernelLogs = true;
-        ProtectControlGroups = true;
-        RestrictNamespaces = true;
-        RestrictRealtime = true;
-        RestrictSUIDSGID = true;
-        LockPersonality = true;
-        SystemCallArchitectures = "native";
-        # Note: helipad needs network for LND and web frontend
-        RestrictAddressFamilies = [ "AF_UNIX" "AF_INET" "AF_INET6" ];
-      };
+          # Hardening
+        }
+        // optionalAttrs cfg.extraHardening {
+          ProtectSystem = "strict";
+          ProtectHome = true;
+          PrivateTmp = true;
+          NoNewPrivileges = true;
+          PrivateDevices = true;
+          MemoryDenyWriteExecute = true;
+          ProtectKernelTunables = true;
+          ProtectKernelModules = true;
+          ProtectKernelLogs = true;
+          ProtectControlGroups = true;
+          RestrictNamespaces = true;
+          RestrictRealtime = true;
+          RestrictSUIDSGID = true;
+          LockPersonality = true;
+          SystemCallArchitectures = "native";
+          # Note: helipad needs network for LND and web frontend
+          RestrictAddressFamilies = ["AF_UNIX" "AF_INET" "AF_INET6"];
+        };
     };
   };
 }

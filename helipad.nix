@@ -25,8 +25,8 @@
       [openssl sqlite]
       ++ lib.optional stdenv.isDarwin
       pkgs.darwin.apple_sdk.frameworks.SystemConfiguration;
-    cargoHash = "sha256-6eAJtaINzs98YTRNGVrkKIYsY2pqxdIzl44IZSsOuy8=";
     cargoPatches = [./Cargo.lock.patch];
+    cargoHash = "sha256-gcAm1Xj81KzbxUIQDmXQ/Rqj+H4OeKkV0bn6SfHQa88=";
     meta = with lib; {
       description = "This is a simple lnd poller and web front-end to see and read boosts and boostagrams.";
       homepage = "https://github.com/Podcastindex-org/helipad";
