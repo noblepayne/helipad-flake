@@ -1,0 +1,22 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main, feat/* ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - name: Build helipad
+        run: nix build .#helipad
+      - name: Build webroot
+        run: nix build .#helipadWebroot
+      - name: Check version
+        run: ./result/bin/helipad --version
+      - name: Flake check
+        run: nix flake check

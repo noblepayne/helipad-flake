@@ -12,12 +12,12 @@
 }: rec {
   helipad = rustPlatform.buildRustPackage rec {
     pname = "helipad";
-    version = "0.2.1";
+    version = "0.2.2";
     helipadSrc = fetchFromGitHub {
       owner = "Podcastindex-org";
       repo = pname;
       rev = "v${version}";
-      hash = "sha256-A9srTQHVLZNtrUzeFV4grHOkSdXpZtqwNNdr9zxtAhg=";
+      hash = "sha256-PaAna0QxePU84Wy30alJgF1xQvq5K5bSlDdJaSgzPFs=";
     };
     src = helipadSrc;
     nativeBuildInputs = [pkg-config protobuf];
@@ -25,8 +25,8 @@
       [openssl sqlite]
       ++ lib.optional stdenv.isDarwin
       pkgs.darwin.apple_sdk.frameworks.SystemConfiguration;
-    cargoHash = "sha256-6eAJtaINzs98YTRNGVrkKIYsY2pqxdIzl44IZSsOuy8=";
     cargoPatches = [./Cargo.lock.patch];
+    cargoHash = "sha256-gcAm1Xj81KzbxUIQDmXQ/Rqj+H4OeKkV0bn6SfHQa88=";
     meta = with lib; {
       description = "This is a simple lnd poller and web front-end to see and read boosts and boostagrams.";
       homepage = "https://github.com/Podcastindex-org/helipad";
