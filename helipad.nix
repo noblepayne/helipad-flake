@@ -12,12 +12,12 @@
 }: rec {
   helipad = rustPlatform.buildRustPackage rec {
     pname = "helipad";
-    version = "0.2.1";
+    version = "0.2.2";
     helipadSrc = fetchFromGitHub {
       owner = "Podcastindex-org";
       repo = pname;
       rev = "v${version}";
-      hash = "sha256-A9srTQHVLZNtrUzeFV4grHOkSdXpZtqwNNdr9zxtAhg=";
+      hash = "sha256-PaAna0QxePU84Wy30alJgF1xQvq5K5bSlDdJaSgzPFs=";
     };
     src = helipadSrc;
     nativeBuildInputs = [pkg-config protobuf];
