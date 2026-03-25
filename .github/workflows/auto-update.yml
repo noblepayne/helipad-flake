@@ -1,0 +1,54 @@
+name: Auto Update
+
+on:
+  schedule:
+    - cron: '0 0,12 * * *'  # Twice daily
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Run update script
+        id: update
+        run: |
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Run update.sh using nix shell to provide nix-update
+          chmod +x ./update.sh
+          nix develop --command ./update.sh
+          
+          # Check if any new commits were made
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            echo "updates_found=true" >> $GITHUB_OUTPUT
+          else
+            echo "updates_found=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build and validate updates
+        if: steps.update.outputs.updates_found == 'true'
+        run: |
+          echo "Updates found, validating build..."
+          nix build .#helipad
+          
+          echo "Validating binary..."
+          ./result/bin/helipad --version
+
+      - name: Push updates
+        if: steps.update.outputs.updates_found == 'true'
+        run: |
+          git push origin main
